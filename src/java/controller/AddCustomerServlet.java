@@ -4,22 +4,20 @@
  */
 package controller;
 
-import dao.ServiceDAO;
-import dto.ServiceDTO;
-import jakarta.servlet.RequestDispatcher;
+import dao.CustomerDAO;
+import dto.CustomerDTO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
-
 /**
  *
  * @author Admin
  */
-public class SearchServiceByName extends HttpServlet {
+public class AddCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,23 +31,24 @@ public class SearchServiceByName extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String searchValue = request.getParameter("txtSearchValue");
-        String url = "service.jsp";
-        try {
-            if (searchValue.trim().length() > 0) {
-                ServiceDAO dao = new ServiceDAO();
-                
-                List<ServiceDTO> rs = dao.searchServiceByName(searchValue);
-                request.setAttribute("searchResult", rs);
-                url = "searchServiceByName.jsp";
-            }
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String phone = request.getParameter("phone");
+        
+        CustomerDAO dao = new CustomerDAO();
+        
+        try ( PrintWriter out = response.getWriter()) {
+            
+            CustomerDTO c = dao.insertCustomer(email, firstName, lastName, password, phone);
+            
+            response.sendRedirect("CustomerList");
+            
         } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            
+        } catch (ClassNotFoundException ex) {
+            
         }
     }
 

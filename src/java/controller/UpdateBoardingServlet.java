@@ -4,22 +4,20 @@
  */
 package controller;
 
-import dao.ServiceDAO;
-import dto.ServiceDTO;
-import jakarta.servlet.RequestDispatcher;
+import dao.BoardingDAO;
+import dto.BoardingDTO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class SearchServiceByName extends HttpServlet {
+public class UpdateBoardingServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,24 +31,7 @@ public class SearchServiceByName extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String searchValue = request.getParameter("txtSearchValue");
-        String url = "service.jsp";
-        try {
-            if (searchValue.trim().length() > 0) {
-                ServiceDAO dao = new ServiceDAO();
-                
-                List<ServiceDTO> rs = dao.searchServiceByName(searchValue);
-                request.setAttribute("searchResult", rs);
-                url = "searchServiceByName.jsp";
-            }
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
-        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,7 +46,20 @@ public class SearchServiceByName extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String id = request.getParameter("BoardingId");
+        BoardingDAO dao = new BoardingDAO();
+
+        try {
+            BoardingDTO b = dao.searchBoardingById(id);
+            request.setAttribute("boarding", b);
+
+        } catch (ClassNotFoundException ex) {
+
+        } catch (SQLException ex) {
+
+        } finally {
+            request.getRequestDispatcher("updateBoarding.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -79,17 +73,33 @@ public class SearchServiceByName extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String boardingId = request.getParameter("id");
+        String name = request.getParameter("name");
+        String rate_raw = request.getParameter("rate");
+        String description = request.getParameter("description");
+        String img = request.getParameter("img");
+        String length_raw = request.getParameter("length");
+        String height_raw = request.getParameter("height");
+        String width_raw = request.getParameter("width");
+        String maxWeight_raw = request.getParameter("maxWeight");
+
+        try {
+            double rate = Double.parseDouble(rate_raw);
+            double length = Double.parseDouble(length_raw);
+            double height = Double.parseDouble(height_raw);
+            double width = Double.parseDouble(width_raw);
+            double maxWeght = Double.parseDouble(maxWeight_raw);
+
+            BoardingDAO dao = new BoardingDAO();
+            BoardingDTO s = new BoardingDTO(boardingId, name, rate, description, img, length, height, width, maxWeght, true);
+            boolean result = dao.updateBoarding(s);
+            
+        } catch (ClassNotFoundException ex) {
+
+        } catch (SQLException ex) {
+
+        } finally {
+            response.sendRedirect("BoardingServlet");
+        }
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

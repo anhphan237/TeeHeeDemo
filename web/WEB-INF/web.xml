@@ -17,10 +17,6 @@
         <servlet-class>controller.ServiceServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SearchCustomerByIdServlet</servlet-name>
-        <servlet-class>controller.SearchCustomerByIdServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>AddServiceServlet</servlet-name>
         <servlet-class>controller.AddServiceServlet</servlet-class>
     </servlet>
@@ -35,6 +31,38 @@
     <servlet>
         <servlet-name>SearchServiceById</servlet-name>
         <servlet-class>controller.SearchServiceByName</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddCustomerServlet</servlet-name>
+        <servlet-class>controller.AddCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCustomerServlet</servlet-name>
+        <servlet-class>controller.UpdateCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <servlet-class>controller.DeleteCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BoardingServlet</servlet-name>
+        <servlet-class>controller.BoardingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddBoardingServlet</servlet-name>
+        <servlet-class>controller.AddBoardingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateBoardingServlet</servlet-name>
+        <servlet-class>controller.UpdateBoardingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteBoardingServlet</servlet-name>
+        <servlet-class>controller.DeleteBoardingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchBoardingByName</servlet-name>
+        <servlet-class>controller.SearchBoardingByName</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -53,10 +81,6 @@
         <url-pattern>/ServiceServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SearchCustomerByIdServlet</servlet-name>
-        <url-pattern>/SearchCustomerByIdServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>AddServiceServlet</servlet-name>
         <url-pattern>/AddServiceServlet</url-pattern>
     </servlet-mapping>
@@ -71,6 +95,38 @@
     <servlet-mapping>
         <servlet-name>SearchServiceById</servlet-name>
         <url-pattern>/SearchServiceById</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCustomerServlet</servlet-name>
+        <url-pattern>/AddCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCustomerServlet</servlet-name>
+        <url-pattern>/UpdateCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <url-pattern>/DeleteCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BoardingServlet</servlet-name>
+        <url-pattern>/BoardingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddBoardingServlet</servlet-name>
+        <url-pattern>/AddBoardingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateBoardingServlet</servlet-name>
+        <url-pattern>/UpdateBoardingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteBoardingServlet</servlet-name>
+        <url-pattern>/DeleteBoardingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchBoardingByName</servlet-name>
+        <url-pattern>/SearchBoardingByName</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

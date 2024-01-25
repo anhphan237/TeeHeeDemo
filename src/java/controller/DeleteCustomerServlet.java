@@ -4,22 +4,20 @@
  */
 package controller;
 
-import dao.ServiceDAO;
-import dto.ServiceDTO;
-import jakarta.servlet.RequestDispatcher;
+import dao.CustomerDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class SearchServiceByName extends HttpServlet {
+public class DeleteCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,24 +31,7 @@ public class SearchServiceByName extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String searchValue = request.getParameter("txtSearchValue");
-        String url = "service.jsp";
-        try {
-            if (searchValue.trim().length() > 0) {
-                ServiceDAO dao = new ServiceDAO();
-                
-                List<ServiceDTO> rs = dao.searchServiceByName(searchValue);
-                request.setAttribute("searchResult", rs);
-                url = "searchServiceByName.jsp";
-            }
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
-        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,7 +46,17 @@ public class SearchServiceByName extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String id = request.getParameter("CustomerId");
+        boolean result = true;
+        try {
+            CustomerDAO dao = new CustomerDAO();
+            result = dao.deleteCustomer(id);
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            request.getRequestDispatcher("CustomerList").forward(request, response);
+        }
     }
 
     /**

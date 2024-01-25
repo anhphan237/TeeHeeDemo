@@ -4,8 +4,8 @@
  */
 package controller;
 
-import dao.ServiceDAO;
-import dto.ServiceDTO;
+import dao.BoardingDAO;
+import dto.BoardingDTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -13,13 +13,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
  * @author Admin
  */
-public class SearchServiceByName extends HttpServlet {
+public class SearchBoardingByName extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,15 +33,16 @@ public class SearchServiceByName extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         String searchValue = request.getParameter("txtSearchValue");
-        String url = "service.jsp";
+        String url = "boarding.jsp";
         try {
             if (searchValue.trim().length() > 0) {
-                ServiceDAO dao = new ServiceDAO();
-                
-                List<ServiceDTO> rs = dao.searchServiceByName(searchValue);
+                BoardingDAO dao = new BoardingDAO();
+
+                ArrayList<BoardingDTO> rs = dao.searchBoardingByName(searchValue);
                 request.setAttribute("searchResult", rs);
-                url = "searchServiceByName.jsp";
+                url = "searchBoardingByName.jsp";
             }
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();

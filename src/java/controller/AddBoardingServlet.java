@@ -4,22 +4,23 @@
  */
 package controller;
 
-import dao.ServiceDAO;
-import dto.ServiceDTO;
-import jakarta.servlet.RequestDispatcher;
+import dao.BoardingDAO;
+import dto.BoardingDTO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Admin
  */
-public class SearchServiceByName extends HttpServlet {
+public class AddBoardingServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,23 +34,33 @@ public class SearchServiceByName extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String searchValue = request.getParameter("txtSearchValue");
-        String url = "service.jsp";
+
+        String name = request.getParameter("name");
+        String rate_raw = request.getParameter("rate");
+        String description = request.getParameter("description");
+        String img = request.getParameter("img");
+        String length_raw = request.getParameter("length");
+        String height_raw = request.getParameter("height");
+        String width_raw = request.getParameter("width");
+        String maxWeight_raw = request.getParameter("maxWeight");
+        
         try {
-            if (searchValue.trim().length() > 0) {
-                ServiceDAO dao = new ServiceDAO();
-                
-                List<ServiceDTO> rs = dao.searchServiceByName(searchValue);
-                request.setAttribute("searchResult", rs);
-                url = "searchServiceByName.jsp";
-            }
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+            
+            double rate = Double.parseDouble(rate_raw);
+            double length = Double.parseDouble(length_raw);
+            double height = Double.parseDouble(height_raw);
+            double width = Double.parseDouble(width_raw);
+            double maxWeight = Double.parseDouble(maxWeight_raw);
+            
+            BoardingDAO dao = new BoardingDAO();
+            BoardingDTO b = dao.insertBoarding(name, rate, description, img, length, height, width, maxWeight);
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            response.sendRedirect("BoardingServlet");
         }
     }
 
