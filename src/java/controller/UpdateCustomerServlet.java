@@ -65,9 +65,9 @@ public class UpdateCustomerServlet extends HttpServlet {
             CustomerDTO c = dao.searchCustomerById(id);
             //response.sendRedirect("updateCustomer.jsp");
             request.setAttribute("customer", c);
-
+            System.out.println(id);
         } catch (ClassNotFoundException ex) {
-
+            
         } catch (SQLException ex) {
 
         } finally {

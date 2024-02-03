@@ -36,25 +36,24 @@ public class AddBoardingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         String name = request.getParameter("name");
-        String rate_raw = request.getParameter("rate");
-        String description = request.getParameter("description");
+        String description_raw = request.getParameter("description");
         String img = request.getParameter("img");
         String length_raw = request.getParameter("length");
         String height_raw = request.getParameter("height");
         String width_raw = request.getParameter("width");
         String maxWeight_raw = request.getParameter("maxWeight");
-        
+        String price_raw = request.getParameter("price");
+
         try {
-            
-            double rate = Double.parseDouble(rate_raw);
             double length = Double.parseDouble(length_raw);
             double height = Double.parseDouble(height_raw);
             double width = Double.parseDouble(width_raw);
             double maxWeight = Double.parseDouble(maxWeight_raw);
-            
+            double price = Double.parseDouble(price_raw);
+
             BoardingDAO dao = new BoardingDAO();
-            BoardingDTO b = dao.insertBoarding(name, rate, description, img, length, height, width, maxWeight);
-            
+            BoardingDTO b = dao.insertBoarding(name, description_raw, img, length, height, width, maxWeight, price);
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {

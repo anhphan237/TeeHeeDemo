@@ -15,8 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -34,16 +32,19 @@ public class CustomerList extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try {
             CustomerDAO dao = new CustomerDAO();
             ArrayList<CustomerDTO> list = dao.getAll();
             request.setAttribute("data", list);
-            request.getRequestDispatcher("customerList.jsp").forward(request, response);
+            
         } catch (ClassNotFoundException ex) {
             
         } catch (SQLException ex) {
             
+        }finally{
+            request.getRequestDispatcher("customerList.jsp").forward(request, response);
         }
+            
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

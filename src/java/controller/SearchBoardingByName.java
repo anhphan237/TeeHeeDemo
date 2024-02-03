@@ -6,13 +6,11 @@ package controller;
 
 import dao.BoardingDAO;
 import dto.BoardingDTO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -34,24 +32,24 @@ public class SearchBoardingByName extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        String searchValue = request.getParameter("txtSearchValue");
-        String url = "boarding.jsp";
-        try {
-            if (searchValue.trim().length() > 0) {
-                BoardingDAO dao = new BoardingDAO();
-
-                ArrayList<BoardingDTO> rs = dao.searchBoardingByName(searchValue);
-                request.setAttribute("searchResult", rs);
-                url = "searchBoardingByName.jsp";
-            }
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
-        }
+//        String searchValue = request.getParameter("txtSearchValue");
+//        String url = "boarding.jsp";
+//        try {
+//            if (searchValue.trim().length() > 0) {
+//                BoardingDAO dao = new BoardingDAO();
+//
+//                ArrayList<BoardingDTO> rs = dao.searchBoardingByName(searchValue);
+//                request.setAttribute("searchResult", rs);
+//                url = "searchBoardingByName.jsp";
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            ex.printStackTrace();
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        } finally {
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

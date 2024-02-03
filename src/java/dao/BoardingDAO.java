@@ -5,7 +5,6 @@
 package dao;
 
 import dto.BoardingDTO;
-import dto.CustomerDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,25 +26,30 @@ public class BoardingDAO {
 
         try {
             con = DBHelper.makeConnection();
-            String sql = "SELECT [boardingId]\n"
-                    + "      ,[name]\n"
-                    + "      ,[rate]\n"
-                    + "      ,[description]\n"
-                    + "      ,[img]\n"
-                    + "      ,[length]\n"
-                    + "      ,[height]\n"
-                    + "      ,[width]\n"
-                    + "      ,[maxWeight]\n"
-                    + "      ,[status]\n"
-                    + "  FROM [dbo].[boarding]";
+            String sql = "select a.*, c.latestPrice from [dbo].[boarding] a \n"
+                    + "join\n"
+                    + "(SELECT\n"
+                    + "    boardingId,\n"
+                    + "    (SELECT TOP 1 date FROM [dbo].[Boarding_Price] bp\n"
+                    + "     WHERE bp.boardingId = b.boardingId\n"
+                    + "     ORDER BY date DESC) AS latestDate,\n"
+                    + "    (SELECT TOP 1 price FROM [dbo].[Boarding_Price] bp\n"
+                    + "     WHERE bp.boardingId = b.boardingId\n"
+                    + "     ORDER BY date DESC) AS latestPrice\n"
+                    + "FROM\n"
+                    + "    [dbo].[Boarding_Price] b\n"
+                    + "GROUP BY\n"
+                    + "    boardingId) c on a.boardingId = c.boardingID";
 
             st = con.prepareStatement(sql);
             rs = st.executeQuery();
             while (rs.next()) {
-                BoardingDTO c = new BoardingDTO(rs.getString("boardingId"), rs.getString("name"),
-                        rs.getDouble("rate"), rs.getString("description"), rs.getString("img"),
+
+                BoardingDTO c;
+                c = new BoardingDTO(rs.getString("boardingId"), rs.getString("name"),
+                        rs.getDouble("rate"), rs.getString("description").split("#"), rs.getString("img"),
                         rs.getDouble("length"), rs.getDouble("height"), rs.getDouble("width"), rs.getDouble("maxWeight"),
-                        rs.getBoolean("status"));
+                        rs.getBoolean("status"), rs.getDouble("latestPrice"));
                 list.add(c);
             }
         } finally {
@@ -62,45 +66,35 @@ public class BoardingDAO {
         return list;
     }
 
-    public BoardingDTO insertBoarding(String name, double rate, String description, String img,
-            double length, double height, double width, double maxWeight) throws SQLException, ClassNotFoundException {
+    public BoardingDTO insertBoarding(String name, String description_raw, String img,
+            double length, double height, double width, double maxWeight, double price) throws SQLException, ClassNotFoundException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
         boolean status = true;
-        BoardingDTO b = null;
+        BoardingDTO b;
         String boardingId = this.createBoardingId();
+        String[] description = description_raw.split("#");
 
         try {
             con = DBHelper.makeConnection();
             if (con != null) {
-                String sql = "INSERT INTO [dbo].[boarding]\n"
-                        + "           ([boardingId]\n"
-                        + "           ,[name]\n"
-                        + "           ,[rate]\n"
-                        + "           ,[description]\n"
-                        + "           ,[img]\n"
-                        + "           ,[length]\n"
-                        + "           ,[height]\n"
-                        + "           ,[width]\n"
-                        + "           ,[maxWeight]\n"
-                        + "           ,[status])"
-                        + "    VALUES (?,?,?,?,?,?,?,?,?,?)";
+                String sql = "exec insert_boarding ?,?,?,?,?,?,?,?,?,?";
 
                 stm = con.prepareStatement(sql);
 
                 stm.setString(1, boardingId);
                 stm.setString(2, name);
-                stm.setDouble(3, rate);
-                stm.setString(4, description);
-                stm.setString(5, img);
-                stm.setDouble(6, length);
-                stm.setDouble(7, height);
-                stm.setDouble(8, width);
-                stm.setDouble(9, maxWeight);
-                stm.setBoolean(10, status);
+                stm.setString(3, description_raw);
+                stm.setString(4, img);
+                stm.setDouble(5, length);
+                stm.setDouble(6, height);
+                stm.setDouble(7, width);
+                stm.setDouble(8, maxWeight);
+                stm.setBoolean(9, status);
+                stm.setDouble(10, price);
 
-                b = new BoardingDTO(boardingId, name, rate, description, img, length, height, width, maxWeight, status);
+                b = new BoardingDTO(boardingId, name, 0, description, img, length, height, width, maxWeight, status, price);
 
                 stm.executeUpdate();
             }
@@ -135,7 +129,7 @@ public class BoardingDAO {
 
                 if (rs.next()) {
                     count = rs.getInt("recordCount");
-                    newBoardingId = String.format("B%04d", count + 1);
+                    newBoardingId = String.format("B%03d", count + 1);
                 }
             }
             if (newBoardingId != null) {
@@ -165,30 +159,32 @@ public class BoardingDAO {
         try {
             con = DBHelper.makeConnection();
             if (con != null) {
-                String sql = "UPDATE [dbo].[boarding]\n"
-                        + "   SET [name] = ?\n"
-                        + "      ,[rate] = ?\n"
-                        + "      ,[description] = ?\n"
-                        + "      ,[img] = ?\n"
-                        + "      ,[length] = ?\n"
-                        + "      ,[height] = ?\n"
-                        + "      ,[width] = ?\n"
-                        + "      ,[maxWeight] = ?\n"
-                        + "      ,[status] = ?\n"
-                        + " WHERE [boardingId] = ?";
+                String sql = "EXEC update_Boarding\n"
+                        + "    @boardingId = ?,\n"
+                        + "    @name = ?,\n"
+                        + "    @rate = ?,\n"
+                        + "    @description = ?,\n"
+                        + "    @img = ?,\n"
+                        + "    @length = ?,\n"
+                        + "    @height = ?,\n"
+                        + "    @width = ?,\n"
+                        + "    @maxWeight = ?,\n"
+                        + "    @status = ?,\n"
+                        + "    @price = ?";
 
                 stm = con.prepareStatement(sql);
 
-                stm.setString(1, s.getName());
-                stm.setDouble(2, s.getRate());
-                stm.setString(3, s.getDescription());
-                stm.setString(4, s.getImg());
-                stm.setDouble(5, s.getLength());
-                stm.setDouble(6, s.getHeight());
-                stm.setDouble(7, s.getWidth());
-                stm.setDouble(8, s.getMaxWeight());
-                stm.setBoolean(9, s.isStatus());
-                stm.setString(10, s.getBoardingId());
+                stm.setString(1, s.getBoardingId());
+                stm.setString(2, s.getName());
+                stm.setDouble(3, s.getRate());
+                stm.setString(4, convertArrayToString(s.getDescription()));
+                stm.setString(5, s.getImg());
+                stm.setDouble(6, s.getLength());
+                stm.setDouble(7, s.getHeight());
+                stm.setDouble(8, s.getWidth());
+                stm.setDouble(9, s.getMaxWeight());
+                stm.setBoolean(10, s.isStatus());
+                stm.setDouble(11, s.getPrice());
 
                 result = stm.executeUpdate();
 
@@ -210,6 +206,15 @@ public class BoardingDAO {
         return false;
     }
 
+    public String convertArrayToString(String[] x) {
+        String rs = null;
+
+        for (String string : x) {
+            rs += string + " ";
+        }
+        return rs;
+    }
+
     public BoardingDTO searchBoardingById(String boardingId) throws ClassNotFoundException, SQLException {
         Connection con = null;
         ResultSet rs = null;
@@ -218,7 +223,7 @@ public class BoardingDAO {
         try {
             con = DBHelper.makeConnection();
             if (con != null) {
-                String sql = "SELECT [boardingId]\n"
+                String sql = "SELECT a.[boardingId]\n"
                         + "      ,[name]\n"
                         + "      ,[rate]\n"
                         + "      ,[description]\n"
@@ -228,16 +233,19 @@ public class BoardingDAO {
                         + "      ,[width]\n"
                         + "      ,[maxWeight]\n"
                         + "      ,[status]\n"
-                        + "  FROM [dbo].[boarding]"
-                        + "  where boardingId = ?";
+                        + "	  ,b.price\n"
+                        + "  FROM [dbo].[boarding] a,[dbo].[Boarding_Price] b\n"
+                        + "  where a.boardingId = b.boardingID and a.boardingId = ?";
 
                 stm = con.prepareStatement(sql);
                 stm.setString(1, boardingId);
                 rs = stm.executeQuery();
+
                 if (rs.next()) {
                     BoardingDTO b = new BoardingDTO(boardingId, rs.getString("name"), rs.getDouble("rate"),
-                            rs.getString("description"), rs.getString("img"),rs.getDouble("length"),rs.getDouble("height"),rs.getDouble("width"),
-                            rs.getDouble("maxWeight"), rs.getBoolean("status"));
+                            rs.getString("description").split("#"), rs.getString("img"), rs.getDouble("length"),
+                            rs.getDouble("height"), rs.getDouble("width"),
+                            rs.getDouble("maxWeight"), rs.getBoolean("status"), rs.getDouble("price"));
                     if (b != null) {
                         return b;
                     }
@@ -256,7 +264,7 @@ public class BoardingDAO {
         }
         return null;
     }
-    
+
     public void deleteBoarding(String boardingId) throws ClassNotFoundException, SQLException {
         Connection con = null;
         ResultSet rs = null;
@@ -287,7 +295,7 @@ public class BoardingDAO {
             }
         }
     }
-    
+
     public ArrayList<BoardingDTO> searchBoardingByName(String name) throws ClassNotFoundException, SQLException {
         Connection con = null;
         ResultSet rs = null;
@@ -297,7 +305,7 @@ public class BoardingDAO {
         try {
             con = DBHelper.makeConnection();
             if (con != null) {
-                String sql = "SELECT [boardingId]\n"
+                String sql = "SELECT top 1 a.[boardingId]\n"
                         + "      ,[name]\n"
                         + "      ,[rate]\n"
                         + "      ,[description]\n"
@@ -306,17 +314,20 @@ public class BoardingDAO {
                         + "      ,[height]\n"
                         + "      ,[width]\n"
                         + "      ,[maxWeight]\n"
-                        + "      ,[status]\n"
-                        + "  FROM [dbo].[boarding]"
-                        + "  where name like ?";
+                        + "      ,[status],\n"
+                        + "	  b.price\n"
+                        + "  FROM [dbo].[boarding] a, [dbo].[Boarding_Price] b\n"
+                        + "  where name like ? and a.boardingId = b.boardingID "
+                        + "and a.boardingId = ?\n"
+                        + "  order by date desc";
 
                 stm = con.prepareStatement(sql);
                 stm.setString(1, "%" + name + "%");
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     BoardingDTO b = new BoardingDTO(rs.getString("boardingId"), rs.getString("name"), rs.getDouble("rate"),
-                            rs.getString("description"), rs.getString("img"),rs.getDouble("length"),rs.getDouble("height"),rs.getDouble("width"),
-                            rs.getDouble("maxWeight"), rs.getBoolean("status"));
+                            rs.getString("description").split(","), rs.getString("img"), rs.getDouble("length"), rs.getDouble("height"), rs.getDouble("width"),
+                            rs.getDouble("maxWeight"), rs.getBoolean("status"), rs.getDouble("price"));
                     list.add(b);
                 }
             }

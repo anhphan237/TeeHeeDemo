@@ -9,7 +9,7 @@ package dto;
  * @author Admin
  */
 public class CustomerDTO {
-    private String customerID;
+    private String customerId;
     private String email;
     private String password;
     private String firstName;
@@ -23,8 +23,8 @@ public class CustomerDTO {
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String customerID, String email, String password, String firstName, String lastName, String phone, int point, String member, String img, boolean status) {
-        this.customerID = customerID;
+    public CustomerDTO(String customerId, String email, String password, String firstName, String lastName, String phone, int point, String member, String img, boolean status) {
+        this.customerId = customerId;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -36,12 +36,12 @@ public class CustomerDTO {
         this.status = status;
     }
 
-    public String getCustomerID() {
-        return customerID;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getEmail() {
@@ -117,5 +117,5 @@ public class CustomerDTO {
     }
 
     
-
+    
 }

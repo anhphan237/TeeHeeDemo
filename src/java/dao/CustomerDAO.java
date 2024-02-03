@@ -28,8 +28,16 @@ public class CustomerDAO {
             con = DBHelper.makeConnection();
             if (con != null) {
                 //2. create SQL String
-                String sql = "select [CustomerID], [email], [password], firstName, lastName, phone, point, member, status, img "
-                        + "FROM [dbo].[Customer] "
+                String sql = "SELECT [customerID]\n"
+                        + "      ,[email]\n"
+                        + "      ,[password]\n"
+                        + "      ,[firstname]\n"
+                        + "      ,[lastname]\n"
+                        + "      ,[phone]\n"
+                        + "      ,[point]\n"
+                        + "      ,[member]\n"
+                        + "      ,[img]\n"
+                        + "  FROM [dbo].[Customer]"
                         + "WHERE [email] = ? "
                         + "AND [password] = ?";
                 //3. create SQL Statement
@@ -40,7 +48,7 @@ public class CustomerDAO {
                 rs = stm.executeQuery();
                 //5. process result   
                 if (rs.next()) {
-                    String customerID = rs.getString("CustomerID");
+                    String customerId = rs.getString("CustomerID");
                     String firstName = rs.getString("firstName");
                     String lastName = rs.getString("lastName");
                     String phone = rs.getString("phone");
@@ -48,7 +56,7 @@ public class CustomerDAO {
                     String member = rs.getString("member");
                     String img = rs.getString("img");
                     boolean status = rs.getBoolean("status");
-                    acc = new CustomerDTO(customerID, email, password, firstName, lastName, phone, point, member, img, status);
+                    acc = new CustomerDTO(customerId, email, password, firstName, lastName, phone, point, member, img, status);
                 }
             }
         } finally {
@@ -110,13 +118,23 @@ public class CustomerDAO {
 
         try {
             con = DBHelper.makeConnection();
-            String sql = "select * from customer ";
+            String sql = "SELECT [customerID]\n"
+                        + "      ,[email]\n"
+                        + "      ,[password]\n"
+                        + "      ,[firstname]\n"
+                        + "      ,[lastname]\n"
+                        + "      ,[phone]\n"
+                        + "      ,[point]\n"
+                        + "      ,[member]\n"
+                        + "      ,[img]\n"
+                        + "      ,[status]\n"
+                        + "  FROM [dbo].[Customer]";
 
             st = con.prepareStatement(sql);
             rs = st.executeQuery();
             while (rs.next()) {
-                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
-                        rs.getString("password"), rs.getString("firstName"), rs.getString("lastName"),
+                CustomerDTO c = new CustomerDTO(rs.getString("customerID"), rs.getString("email"),
+                        rs.getString("password"), rs.getString("firstname"), rs.getString("lastname"),
                         rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
                         rs.getBoolean("status"));
                 list.add(c);
@@ -258,8 +276,8 @@ public class CustomerDAO {
             String sql = "SELECT [customerID]\n"
                     + "      ,[email]\n"
                     + "      ,[password]\n"
-                    + "      ,[firstName]\n"
-                    + "      ,[lastName]\n"
+                    + "      ,[firstname]\n"
+                    + "      ,[lastname]\n"
                     + "      ,[phone]\n"
                     + "      ,[point]\n"
                     + "      ,[member]\n"
@@ -271,8 +289,8 @@ public class CustomerDAO {
             st.setString(1, customerId);
             rs = st.executeQuery();
             if (rs.next()) {
-                CustomerDTO c = new CustomerDTO(rs.getString("customerID"), rs.getString("email"),
-                        rs.getString("password"), rs.getString("firstName"), rs.getString("lastName"),
+                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
+                        rs.getString("password"), rs.getString("firstname"), rs.getString("lastname"),
                         rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
                         rs.getBoolean("status"));
                 return c;
@@ -316,7 +334,7 @@ public class CustomerDAO {
 
                 stm = con.prepareStatement(sql);
 
-                stm.setString(1, s.getCustomerID());
+                stm.setString(1, s.getCustomerId());
                 stm.setString(2, s.getEmail());
                 stm.setString(3, s.getPassword());
                 stm.setString(4, s.getFirstName());
@@ -326,7 +344,7 @@ public class CustomerDAO {
                 stm.setString(8, s.getMember());
                 stm.setString(9, s.getImg());
                 stm.setBoolean(10, s.isStatus());
-                stm.setString(11, s.getCustomerID());
+                stm.setString(11, s.getCustomerId());
 
                 result = stm.executeUpdate();
 
@@ -347,7 +365,7 @@ public class CustomerDAO {
         }
         return false;
     }
-    
+
     public boolean deleteCustomer(String customerId)
             throws ClassNotFoundException, SQLException {
         Connection con = null;

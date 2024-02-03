@@ -82,6 +82,7 @@ public class UpdateBoardingServlet extends HttpServlet {
         String height_raw = request.getParameter("height");
         String width_raw = request.getParameter("width");
         String maxWeight_raw = request.getParameter("maxWeight");
+        String price_raw = request.getParameter("price");
 
         try {
             double rate = Double.parseDouble(rate_raw);
@@ -89,15 +90,16 @@ public class UpdateBoardingServlet extends HttpServlet {
             double height = Double.parseDouble(height_raw);
             double width = Double.parseDouble(width_raw);
             double maxWeght = Double.parseDouble(maxWeight_raw);
+            double price = Double.parseDouble(price_raw);
 
             BoardingDAO dao = new BoardingDAO();
-            BoardingDTO s = new BoardingDTO(boardingId, name, rate, description, img, length, height, width, maxWeght, true);
-            boolean result = dao.updateBoarding(s);
+            BoardingDTO s = new BoardingDTO(boardingId, name, rate, description.split("#"), img, length, height, width, maxWeght, true,price);
+            dao.updateBoarding(s);
             
         } catch (ClassNotFoundException ex) {
-
+            ex.printStackTrace();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         } finally {
             response.sendRedirect("BoardingServlet");
         }

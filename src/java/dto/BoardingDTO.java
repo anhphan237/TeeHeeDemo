@@ -12,18 +12,19 @@ public class BoardingDTO {
     private String boardingId;
     private String name;
     private double rate;
-    private String description;
+    private String[] description;
     private String img;
     private double length;
     private double height;
     private double width;
     private double maxWeight;
     private boolean status;
+    private double price;
 
     public BoardingDTO() {
     }
 
-    public BoardingDTO(String boardingId, String name, double rate, String description, String img, double length, double height, double width, double maxWeight, boolean status) {
+    public BoardingDTO(String boardingId, String name, double rate, String[] description, String img, double length, double height, double width, double maxWeight, boolean status, double price) {
         this.boardingId = boardingId;
         this.name = name;
         this.rate = rate;
@@ -34,6 +35,7 @@ public class BoardingDTO {
         this.width = width;
         this.maxWeight = maxWeight;
         this.status = status;
+        this.price = price;
     }
 
     public String getBoardingId() {
@@ -60,11 +62,11 @@ public class BoardingDTO {
         this.rate = rate;
     }
 
-    public String getDescription() {
+    public String[] getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String[] description) {
         this.description = description;
     }
 
@@ -115,6 +117,15 @@ public class BoardingDTO {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     
     
 }
