@@ -405,4 +405,51 @@ public class CustomerDAO {
         }
         return false;
     }
+    
+    public boolean updateUserProfile(String email, String firstName, String lastName, String phone, String img, String customerId)
+            throws ClassNotFoundException, SQLException {
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement stm = null;
+        int result = 0;
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "UPDATE [dbo].[Customer]\n"
+                        + "   SET [email] = ?\n"
+                        + "      ,[firstName] = ?\n"
+                        + "      ,[lastName] = ?\n"
+                        + "      ,[phone] = ?\n"
+                        + "      ,[img] = ?\n"
+                        + " WHERE [customerID] = ?";
+
+                stm = con.prepareStatement(sql);
+
+                stm.setString(1, email);
+                stm.setString(2, firstName);
+                stm.setString(3, lastName);
+                stm.setString(4, phone);
+                stm.setString(5, img);
+                stm.setString(6, customerId);
+
+                result = stm.executeUpdate();
+
+                if (result != 0) {
+                    return true;
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
 }

@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import utils.DBHelper;
 
@@ -35,12 +36,13 @@ public class OrderDAO {
                     + "      ,[total]\n"
                     + "      ,[voucherID]\n"
                     + "      ,[customerID]\n"
-                    + "  FROM [dbo].[Order]";
+                    + "  FROM [dbo].[Order]"
+                    + "  order by [createdDate] desc";
 
             st = con.prepareStatement(sql);
             rs = st.executeQuery();
             while (rs.next()) {
-                OrderDTO o = new OrderDTO(rs.getString("orderID"), rs.getDate("createdDate"),
+                OrderDTO o = new OrderDTO(rs.getString("orderID"), rs.getTimestamp("createdDate"),
                         rs.getInt("status"), rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
                         cDAO.searchCustomerById(rs.getString("customerId")));
                 list.add(o);
@@ -59,7 +61,7 @@ public class OrderDAO {
         return list;
     }
 
-    public boolean insertOrder(Date createdDate, int status, double total, String voucherId, String customerId) throws ClassNotFoundException, SQLException {
+    public boolean insertOrder(Timestamp createdDate, int status, double total, String voucherId, String customerId) throws ClassNotFoundException, SQLException {
         Connection con = null;
         PreparedStatement stm = null;
         int rs;
@@ -80,7 +82,7 @@ public class OrderDAO {
                 stm = con.prepareStatement(sql);
 
                 stm.setString(1, orderId);
-                stm.setDate(2, createdDate);
+                stm.setTimestamp(2, createdDate);
                 stm.setInt(3, status);
                 stm.setDouble(4, total);
                 stm.setString(5, voucherId);
@@ -162,7 +164,7 @@ public class OrderDAO {
                 stm.setString(1, orderId);
                 rs = stm.executeQuery();
                 if (rs.next()) {
-                    OrderDTO b = new OrderDTO(orderId, rs.getDate("createdDate"), rs.getInt("status"),
+                    OrderDTO b = new OrderDTO(orderId, rs.getTimestamp("createdDate"), rs.getInt("status"),
                             rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
                             cDAO.searchCustomerById(rs.getString("customerId")));
                     if (b != null) {
@@ -204,7 +206,7 @@ public class OrderDAO {
 
                 stm = con.prepareStatement(sql);
 
-                stm.setDate(1, o.getCreatedDate());
+                stm.setTimestamp(1, o.getCreatedDate());
                 stm.setInt(2, o.getStatus());
                 stm.setDouble(3, o.getTotal());
                 stm.setString(4, o.getVoucher().getVoucherId());

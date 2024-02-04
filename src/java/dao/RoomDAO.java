@@ -125,4 +125,116 @@ public class RoomDAO {
         }
         return null;
     }
+
+    public RoomDTO searchRoomById(String serviceId) throws ClassNotFoundException, SQLException {
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement stm = null;
+        BoardingDAO bDAO = new BoardingDAO();
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "SELECT[roomID]\n"
+                        + "      ,[boardingID]\n"
+                        + "      ,[status]\n"
+                        + "  FROM [dbo].[Room]"
+                        + "  WHERE [roomID] = ?";
+
+                stm = con.prepareStatement(sql);
+                stm.setString(1, serviceId);
+                rs = stm.executeQuery();
+                if (rs.next()) {
+                    RoomDTO b = new RoomDTO(rs.getString("roomId"), bDAO.searchBoardingById(rs.getString("boardingId")),
+                            rs.getBoolean("status"));
+                    if (b != null) {
+                        return b;
+                    }
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return null;
+    }
+
+    public boolean updateRoom(RoomDTO s)
+            throws ClassNotFoundException, SQLException {
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement stm = null;
+        int result = 0;
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "UPDATE [dbo].[Room]\n"
+                        + "   SET [boardingID] = ?\n"
+                        + "      ,[status] = ?"
+                        + " WHERE [roomID] = ?";
+
+                stm = con.prepareStatement(sql);
+
+                stm.setString(1, s.getBoarding().getBoardingId());
+                stm.setBoolean(2, s.isStatus());
+                stm.setString(3, s.getRoomId());
+
+                result = stm.executeUpdate();
+
+                if (result != 0) {
+                    return true;
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
+    
+    public void deleteRoom(String roomId) throws ClassNotFoundException, SQLException {
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement stm = null;
+        boolean status = false;
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "UPDATE [dbo].[Room]\n"
+                        + "   SET [status] = ?\n"
+                        + " WHERE [roomID] = ?";
+
+                stm = con.prepareStatement(sql);
+                stm.setBoolean(1, status);
+                stm.setString(2, roomId);
+                stm.executeUpdate();
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
 }

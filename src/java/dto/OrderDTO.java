@@ -5,6 +5,7 @@
 package dto;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -12,7 +13,7 @@ import java.sql.Date;
  */
 public class OrderDTO {
     private String orderId;
-    private Date createdDate;
+    private Timestamp createdDate;
     private int status;
     private double total;
     private VoucherDTO voucher;
@@ -21,7 +22,7 @@ public class OrderDTO {
     public OrderDTO() {
     }
 
-    public OrderDTO(String orderId, Date createdDate, int status, double total, VoucherDTO voucher, CustomerDTO customer) {
+    public OrderDTO(String orderId, Timestamp createdDate, int status, double total, VoucherDTO voucher, CustomerDTO customer) {
         this.orderId = orderId;
         this.createdDate = createdDate;
         this.status = status;
@@ -38,11 +39,11 @@ public class OrderDTO {
         this.orderId = orderId;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 

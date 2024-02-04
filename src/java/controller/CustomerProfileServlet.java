@@ -6,24 +6,19 @@
 package controller;
 
 import dao.CustomerDAO;
-import dao.OrderDAO;
-import dao.VoucherDAO;
-import dto.OrderDTO;
+import dto.CustomerDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 /**
  *
  * @author Admin
  */
-public class UpdateOrderServlet extends HttpServlet {
+public class CustomerProfileServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,18 +30,7 @@ public class UpdateOrderServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UpdateOrderServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UpdateOrderServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -60,18 +44,20 @@ public class UpdateOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String id = request.getParameter("OrderId");
-        OrderDAO dao = new OrderDAO();
+        String id = request.getParameter("CustomerId");
+        CustomerDAO dao = new CustomerDAO();
+
         try {
-            OrderDTO o = dao.searchOrderById(id);
-            request.setAttribute("order", o);
-            
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }finally{
-            request.getRequestDispatcher("updateOrder.jsp").forward(request, response);
+            CustomerDTO c = dao.searchCustomerById(id);
+            //response.sendRedirect("updateCustomer.jsp");
+            request.setAttribute("customer", c);
+            System.out.println(id);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            request.getRequestDispatcher("user_view/user_profile.jsp").forward(request, response);
         }
     } 
 
@@ -85,30 +71,23 @@ public class UpdateOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String orderId = request.getParameter("orderId");
-        String createdDate_raw = request.getParameter("createdDate");
-        String status_raw = request.getParameter("status");
-        String total_raw = request.getParameter("total");
-        String voucherId = request.getParameter("voucherId");
         String customerId = request.getParameter("customerId");
+        String email = request.getParameter("email");
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String phone = request.getParameter("phone");
+        String img = request.getParameter("img");
 
         try {
-            double total = Double.parseDouble(total_raw);
-            Timestamp createdDate = Timestamp.valueOf(createdDate_raw);
-            int status = Integer.parseInt(status_raw);
 
-            OrderDAO dao = new OrderDAO();
-            VoucherDAO vDAO = new VoucherDAO();
-            CustomerDAO cDAO = new CustomerDAO();
-            OrderDTO o = new OrderDTO(orderId, createdDate, status, total, vDAO.searchVoucherById(voucherId), cDAO.searchCustomerById(customerId));
-            boolean result = dao.updateOrder(o);
-            
+            CustomerDAO dao = new CustomerDAO();
+            boolean result = dao.updateUserProfile(email,firstName,lastName,phone,img,customerId);
         } catch (ClassNotFoundException ex) {
-
+            ex.printStackTrace();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         } finally {
-            response.sendRedirect("OrderServlet");
+            response.sendRedirect("CustomerList");
         }
     }
 

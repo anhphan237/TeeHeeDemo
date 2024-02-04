@@ -124,6 +124,18 @@
         <servlet-name>AddRoomServlet</servlet-name>
         <servlet-class>controller.AddRoomServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateRoomServlet</servlet-name>
+        <servlet-class>controller.UpdateRoomServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteRoomServlet</servlet-name>
+        <servlet-class>controller.DeleteRoomServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CustomerProfileServlet</servlet-name>
+        <servlet-class>controller.CustomerProfileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -247,6 +259,18 @@
     <servlet-mapping>
         <servlet-name>AddRoomServlet</servlet-name>
         <url-pattern>/AddRoomServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateRoomServlet</servlet-name>
+        <url-pattern>/UpdateRoomServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteRoomServlet</servlet-name>
+        <url-pattern>/DeleteRoomServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerProfileServlet</servlet-name>
+        <url-pattern>/CustomerProfileServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

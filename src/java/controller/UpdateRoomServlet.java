@@ -5,25 +5,22 @@
 
 package controller;
 
-import dao.CustomerDAO;
-import dao.OrderDAO;
-import dao.VoucherDAO;
-import dto.OrderDTO;
+import dao.BoardingDAO;
+import dao.RoomDAO;
+import dto.RoomDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 /**
  *
  * @author Admin
  */
-public class UpdateOrderServlet extends HttpServlet {
+public class UpdateRoomServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -40,10 +37,10 @@ public class UpdateOrderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateOrderServlet</title>");  
+            out.println("<title>Servlet UpdateRoomServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateOrderServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet UpdateRoomServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,18 +57,14 @@ public class UpdateOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String id = request.getParameter("OrderId");
-        OrderDAO dao = new OrderDAO();
+        String id = request.getParameter("RoomId");
+        RoomDAO dao = new RoomDAO();
         try {
-            OrderDTO o = dao.searchOrderById(id);
-            request.setAttribute("order", o);
-            
-        } catch (ClassNotFoundException e) {
+            RoomDTO r = dao.searchRoomById(id);
+            request.setAttribute("room", r);
+            request.getRequestDispatcher("updateRoom.jsp").forward(request, response);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }finally{
-            request.getRequestDispatcher("updateOrder.jsp").forward(request, response);
         }
     } 
 
@@ -85,30 +78,23 @@ public class UpdateOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String orderId = request.getParameter("orderId");
-        String createdDate_raw = request.getParameter("createdDate");
+        String roomId = request.getParameter("id");
+        String boardingId = request.getParameter("boardingId");
         String status_raw = request.getParameter("status");
-        String total_raw = request.getParameter("total");
-        String voucherId = request.getParameter("voucherId");
-        String customerId = request.getParameter("customerId");
-
+        BoardingDAO bDAO = new BoardingDAO();
         try {
-            double total = Double.parseDouble(total_raw);
-            Timestamp createdDate = Timestamp.valueOf(createdDate_raw);
-            int status = Integer.parseInt(status_raw);
-
-            OrderDAO dao = new OrderDAO();
-            VoucherDAO vDAO = new VoucherDAO();
-            CustomerDAO cDAO = new CustomerDAO();
-            OrderDTO o = new OrderDTO(orderId, createdDate, status, total, vDAO.searchVoucherById(voucherId), cDAO.searchCustomerById(customerId));
-            boolean result = dao.updateOrder(o);
+            Boolean status = Boolean.parseBoolean(status_raw);
             
+            RoomDAO dao = new RoomDAO();
+            RoomDTO s = new RoomDTO(roomId,bDAO.searchBoardingById(boardingId), true);
+            boolean result = dao.updateRoom(s);
+            response.sendRedirect("RoomServlet");
         } catch (ClassNotFoundException ex) {
 
         } catch (SQLException ex) {
 
         } finally {
-            response.sendRedirect("OrderServlet");
+
         }
     }
 

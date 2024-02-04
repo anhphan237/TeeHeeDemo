@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  *
@@ -39,7 +40,7 @@ public class AddOrderServlet extends HttpServlet {
         String customerId = request.getParameter("customerId");
 
         try {
-            Date createdDate = Date.valueOf(createdDate_raw);
+            Timestamp createdDate = Timestamp.valueOf(createdDate_raw);
             int status = Integer.parseInt(status_raw);
             double total = Double.parseDouble(total_raw);
 

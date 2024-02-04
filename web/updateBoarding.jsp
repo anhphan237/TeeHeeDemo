@@ -20,12 +20,23 @@
             Enter ID:<input type="text" readonly name="id" value="${c.boardingId}"/><br/>
             Enter Name:<input type="text" name="name" value="${c.name}"/><br/>
             Enter Rate<input type="text" name="rate" value="${c.rate}"/><br/>
-            Enter Description:<input type="text" onkeydown="addHashOnEnter()" name="description" id="description" value="${fn:join(c.description, ', ')}"/><br/>
+<!--            Enter Description:<input type="text" onkeydown="addHashOnEnter()" name="description" id="description" value="${fn:join(c.description, ', ')}"/><br/>
             <script>
                 function addHashOnEnter() {
                     if (event.key === 'Enter') {
                         event.preventDefault();
                         document.getElementById("description").value += "#";
+                    }
+                }
+            </script>-->
+            Enter Description:
+            <textarea onkeydown="addHashOnEnter()" name="description" id="description">${fn:join(c.description, ', ')}</textarea><br/>
+            <script>
+                function addHashOnEnter(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        var descriptionTextArea = document.getElementById("description");
+                        descriptionTextArea.value += "#";
                     }
                 }
             </script>

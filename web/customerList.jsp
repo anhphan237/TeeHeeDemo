@@ -55,6 +55,7 @@
                     <td style="text-align: center;">
                         <a href="UpdateCustomerServlet?CustomerId=${id}">update</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="#" onclick="doDisable('${id}')">disable</a>
+                        <a href="CustomerProfileServlet?CustomerId=${id}">customer's profile</a>
                     </td>
                 </tr>
             </c:forEach>
