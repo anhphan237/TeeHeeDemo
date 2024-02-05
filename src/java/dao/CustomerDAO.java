@@ -28,17 +28,36 @@ public class CustomerDAO {
             con = DBHelper.makeConnection();
             if (con != null) {
                 //2. create SQL String
-                String sql = "SELECT [customerID]\n"
-                        + "      ,[email]\n"
-                        + "      ,[password]\n"
-                        + "      ,[firstname]\n"
-                        + "      ,[lastname]\n"
-                        + "      ,[phone]\n"
-                        + "      ,[point]\n"
-                        + "      ,[member]\n"
-                        + "      ,[img]\n"
-                        + "  FROM [dbo].[Customer]"
-                        + "WHERE [email] = ? "
+                String sql = "select * from \n"
+                        + "(SELECT \n"
+                        + "    [customerID],\n"
+                        + "    [email],\n"
+                        + "    [password],\n"
+                        + "    [firstname],\n"
+                        + "    [lastname],\n"
+                        + "    [phone],\n"
+                        + "    [point],\n"
+                        + "    [member],\n"
+                        + "    [img],\n"
+                        + "    [status]\n"
+                        + "FROM \n"
+                        + "    [dbo].[Customer]\n"
+                        + "UNION\n"
+                        + "SELECT \n"
+                        + "    [staffID] as [customerID],\n"
+                        + "    [email],\n"
+                        + "    [password],\n"
+                        + "    [firstname],\n"
+                        + "    [lastname],\n"
+                        + "    [phone],\n"
+                        + "    0 as [point],  \n"
+                        + "    '' as [member], \n"
+                        + "    [img],\n"
+                        + "    [status]\n"
+                        + "FROM \n"
+                        + "    [dbo].[Staff]) a\n"
+                        + "WHERE \n"
+                        + "[email] = ?\n"
                         + "AND [password] = ?";
                 //3. create SQL Statement
                 stm = con.prepareStatement(sql);
@@ -56,7 +75,10 @@ public class CustomerDAO {
                     String member = rs.getString("member");
                     String img = rs.getString("img");
                     boolean status = rs.getBoolean("status");
-                    acc = new CustomerDTO(customerId, email, password, firstName, lastName, phone, point, member, img, status);
+                    if (status) {
+                        acc = new CustomerDTO(customerId, email, password, firstName,
+                                lastName, phone, point, member, img, status);
+                    }
                 }
             }
         } finally {
@@ -71,6 +93,55 @@ public class CustomerDAO {
             }
         }
         return acc;
+    }
+
+    public String checkUserRole(String email, String password) throws ClassNotFoundException, SQLException {
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement stm = null;
+        String result = "";
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "select * from\n"
+                        + "(select [customerID],[email],[password],[firstname],"
+                        + "[lastname],[phone],[img],[status]\n"
+                        + "from [dbo].[Customer]\n"
+                        + "union \n"
+                        + "select \n"
+                        + "[staffID] as [customerID],[email],[password],"
+                        + "[firstname],[lastname],[phone],[img],[status]\n"
+                        + "from [dbo].[Staff]) a\n"
+                        + "where a.email = ?\n"
+                        + "and a.password = ?";
+
+                stm = con.prepareStatement(sql);
+                stm.setString(1, email);
+                stm.setString(2, password);
+                rs = stm.executeQuery();
+
+                if (rs.next()) {
+                    String customerId = rs.getString("CustomerID");
+                    if (customerId.toUpperCase().contains("ST")) {
+                        result = "1";
+                    } else if (customerId.toUpperCase().contains("C")) {
+                        result = "2";
+                    }
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
     }
 
     public String createCustomerId() throws ClassNotFoundException, SQLException {
@@ -119,16 +190,16 @@ public class CustomerDAO {
         try {
             con = DBHelper.makeConnection();
             String sql = "SELECT [customerID]\n"
-                        + "      ,[email]\n"
-                        + "      ,[password]\n"
-                        + "      ,[firstname]\n"
-                        + "      ,[lastname]\n"
-                        + "      ,[phone]\n"
-                        + "      ,[point]\n"
-                        + "      ,[member]\n"
-                        + "      ,[img]\n"
-                        + "      ,[status]\n"
-                        + "  FROM [dbo].[Customer]";
+                    + "      ,[email]\n"
+                    + "      ,[password]\n"
+                    + "      ,[firstname]\n"
+                    + "      ,[lastname]\n"
+                    + "      ,[phone]\n"
+                    + "      ,[point]\n"
+                    + "      ,[member]\n"
+                    + "      ,[img]\n"
+                    + "      ,[status]\n"
+                    + "  FROM [dbo].[Customer]";
 
             st = con.prepareStatement(sql);
             rs = st.executeQuery();
@@ -247,7 +318,8 @@ public class CustomerDAO {
                 stm.setString(9, img);
                 stm.setBoolean(10, status);
 
-                c = new CustomerDTO(password, email, password, firstName, lastName, phone, point, member, img, status);
+                c = new CustomerDTO(password, email, password, firstName,
+                        lastName, phone, point, member, img, status);
                 stm.executeUpdate();
             }
         } finally {
@@ -405,7 +477,7 @@ public class CustomerDAO {
         }
         return false;
     }
-    
+
     public boolean updateUserProfile(String email, String firstName, String lastName, String phone, String img, String customerId)
             throws ClassNotFoundException, SQLException {
         Connection con = null;

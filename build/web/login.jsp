@@ -24,15 +24,8 @@
         <div class="login-form">
             <form action="DispatchServlet" method="POST">
                 <h1>NEKO HEE</h1>
-                <input type="text" name="email" placeholder="Email" class="input" />
-                <br />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    class="input"
-                    />
-                <br />
+                <input type="text" name="email" placeholder="Email" class="input" /><br />
+                <input type="password" name="password" placeholder="Password" class="input"/><br/>
                 <input type="submit" value="Login" class="button" name="btAction" />
             </form>
 

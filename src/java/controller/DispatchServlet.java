@@ -22,7 +22,8 @@ public class DispatchServlet extends HttpServlet {
    private final String HOME_PAGE = "home.jsp";
    private final String LOGIN_CONTROLLER = "LoginServlet";
    private final String REGISTRATION_CONTROLLER = "RegistrationServlet";
-//   private final String NULL_CONTROLLER = "NullServlet";
+   private final String NULL_CONTROLLER = "NullServlet";
+   
    /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -38,7 +39,7 @@ public class DispatchServlet extends HttpServlet {
         String button = request.getParameter("btAction");
         try  {
            if (button == null) {
-//               url = NULL_CONTROLLER;
+               
            } else if (button.equals("Login")) {
                url = LOGIN_CONTROLLER;
            } else if (button.equals("Registration")){

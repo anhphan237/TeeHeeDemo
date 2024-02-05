@@ -24,6 +24,8 @@ public class LoginServlet extends HttpServlet {
 
     private final String INVALID_PAGE = "invalid.html";
     private final String HOME_PAGE = "home.jsp";
+    private final String ADMIN_PAGE = "adminHome.jsp";
+    private final String USER_PAGE = "home.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,19 +47,30 @@ public class LoginServlet extends HttpServlet {
             CustomerDAO dao = new CustomerDAO();
             CustomerDTO acc = dao.checkLogin(email, password);
             if (acc != null) {
-                url = HOME_PAGE;
-                HttpSession session = request.getSession();
-                session.setAttribute("username", acc.getFirstName()+" "+acc.getLastName());
-                Cookie cookie = new Cookie(email, password);
-                cookie.setMaxAge(60 * 3);
-                response.addCookie(cookie);
+                String role = dao.checkUserRole(email, password);
+                if (role.equals("1")) {
+                    url = ADMIN_PAGE;
+                    HttpSession session = request.getSession();
+//                session.setAttribute("username", acc.getFirstName()+" "+acc.getLastName());
+                    session.setAttribute("user", acc);
+                    Cookie cookie = new Cookie(email, password);
+                    cookie.setMaxAge(60 * 3);
+                    response.addCookie(cookie);
+                }else {
+                    url = HOME_PAGE;
+                    HttpSession session = request.getSession();
+//                session.setAttribute("username", acc.getFirstName()+" "+acc.getLastName());
+                    session.setAttribute("user", acc);
+                    Cookie cookie = new Cookie(email, password);
+                    cookie.setMaxAge(60 * 3);
+                    response.addCookie(cookie);
+                }
             }
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-//            response.sendRedirect(url);
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }

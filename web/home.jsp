@@ -50,7 +50,8 @@
             </div>
             <div class="user">
 <!--                <a href="login.jsp" class="login">Hello, Sign in</a>-->
-                <a href="login.jsp" class="login">Hello, ${sessionScope.username != null ? sessionScope.username : "Sign in"}</a>
+                <!--<a href="login.jsp" class="login">Hello, ${sessionScope.username != null ? sessionScope.username : "Sign in"}</a>-->
+                <a href="login.jsp" class="login">Hello, ${sessionScope.user.firstName != null ? sessionScope.user.firstName : "Sign in"}</a>
                 <a href="order.jsp" class="order">Order</a>
                 <a href="cart.jsp" class="cart"
                    ><i class="fa-regular fa-cart-shopping"></i> Cart</a
