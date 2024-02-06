@@ -276,4 +276,48 @@ public class PetDAO {
         }
         return false;
     }
+    
+    public ArrayList<PetDTO> getPetByCusId(String customerId) throws ClassNotFoundException, SQLException {
+
+        Connection con = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        ArrayList<PetDTO> list = new ArrayList();
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "SELECT [petID]\n"
+                    + "      ,[name]\n"
+                    + "      ,[dob]\n"
+                    + "      ,[customerID]\n"
+                    + "      ,[type]\n"
+                    + "      ,[weight]\n"
+                    + "      ,[gender]\n"
+                    + "      ,[vaccinated]\n"
+                    + "      ,[status]\n"
+                    + "  FROM [dbo].[Pet]"
+                    + "  WHERE [customerID] = ?";
+            st = con.prepareStatement(sql);
+            st.setString(1, customerId);
+            rs = st.executeQuery();
+            while (rs.next()) {
+                PetDTO c = new PetDTO(rs.getString("petId"), rs.getString("name"),
+                        rs.getDate("dob"), rs.getString("customerId"), rs.getBoolean("type"),
+                        rs.getDouble("weight"), rs.getBoolean("gender"), rs.getBoolean("vaccinated"),
+                        rs.getBoolean("status"));
+                list.add(c);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return list;
+    }
 }

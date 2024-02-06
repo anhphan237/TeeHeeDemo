@@ -136,6 +136,30 @@
         <servlet-name>CustomerProfileServlet</servlet-name>
         <servlet-class>controller.CustomerProfileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchOrderByStatus</servlet-name>
+        <servlet-class>controller.SearchOrderByStatus</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPetByCustomerId</servlet-name>
+        <servlet-class>controller.SearchPetByCustomerId</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCustomerByName</servlet-name>
+        <servlet-class>controller.SearchCustomerByName</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCustomerByPhone</servlet-name>
+        <servlet-class>controller.SearchCustomerByPhone</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCustomerByEmail</servlet-name>
+        <servlet-class>controller.SearchCustomerByEmail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCustomerPassword</servlet-name>
+        <servlet-class>controller.UpdateCustomerPassword</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -271,6 +295,30 @@
     <servlet-mapping>
         <servlet-name>CustomerProfileServlet</servlet-name>
         <url-pattern>/CustomerProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchOrderByStatus</servlet-name>
+        <url-pattern>/SearchOrderByStatus</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPetByCustomerId</servlet-name>
+        <url-pattern>/SearchPetByCustomerId</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCustomerByName</servlet-name>
+        <url-pattern>/SearchCustomerByName</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCustomerByPhone</servlet-name>
+        <url-pattern>/SearchCustomerByPhone</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCustomerByEmail</servlet-name>
+        <url-pattern>/SearchCustomerByEmail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCustomerPassword</servlet-name>
+        <url-pattern>/UpdateCustomerPassword</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

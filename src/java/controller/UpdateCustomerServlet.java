@@ -60,7 +60,6 @@ public class UpdateCustomerServlet extends HttpServlet {
             throws ServletException, IOException {
         String id = request.getParameter("CustomerId");
         CustomerDAO dao = new CustomerDAO();
-
         try {
             CustomerDTO c = dao.searchCustomerById(id);
             //response.sendRedirect("updateCustomer.jsp");

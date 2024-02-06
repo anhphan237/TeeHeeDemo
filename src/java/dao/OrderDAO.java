@@ -6,7 +6,6 @@ package dao;
 
 import dto.OrderDTO;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,7 +36,7 @@ public class OrderDAO {
                     + "      ,[voucherID]\n"
                     + "      ,[customerID]\n"
                     + "  FROM [dbo].[Order]"
-                    + "  order by [createdDate] desc";
+                    + "  order by [status], [createdDate] desc";
 
             st = con.prepareStatement(sql);
             rs = st.executeQuery();
@@ -231,5 +230,52 @@ public class OrderDAO {
             }
         }
         return false;
+    }
+    
+    public ArrayList<OrderDTO> searchOrderByStatus(String status) throws ClassNotFoundException, SQLException {
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement stm = null;
+        VoucherDAO vDAO = new VoucherDAO();
+        CustomerDAO cDAO = new CustomerDAO();
+        ArrayList<OrderDTO> list = new ArrayList();
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "SELECT [OrderID]\n"
+                        + "      ,[createdDate]\n"
+                        + "      ,[status]\n"
+                        + "      ,[total]\n"
+                        + "      ,[voucherID]\n"
+                        + "      ,[customerID]\n"
+                        + "  FROM [dbo].[Order]"
+                        + "  where [status] = ?\n"
+                        + "  order by [createdDate] desc";
+
+                stm = con.prepareStatement(sql);
+                stm.setString(1, status);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    OrderDTO b = new OrderDTO(rs.getString("orderID"), rs.getTimestamp("createdDate"), rs.getInt("status"),
+                            rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
+                            cDAO.searchCustomerById(rs.getString("customerId")));
+                    if (b != null) {
+                        list.add(b);
+                    }
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return list;
     }
 }

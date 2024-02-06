@@ -16,6 +16,11 @@
     <center>
         <h1>List of Orders</h1>
         <h3><a href="addOrder.jsp">Add new</a></h3>
+        
+        <form action="SearchOrderByStatus">
+            Search Order By Status<input type="text" name="txtSearchValue"></input>
+            <input type="submit" value="Search"/>
+        </form>
 
         <table border="1px" width="40%">
             <tr>
@@ -32,7 +37,22 @@
                 <tr>
                     <td>${id}</td>
                     <td>${c.createdDate}</td>
-                    <td>${c.status}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${c.status eq 1}">
+                                pending
+                            </c:when>
+                            <c:when test="${c.status eq 2}">
+                                confirm
+                            </c:when>
+                            <c:when test="${c.status eq 3}">
+                                complete
+                            </c:when>
+                            <c:when test="${c.status eq 4}">
+                                cancel
+                            </c:when>
+                        </c:choose>
+                    </td> 
                     <td>${c.total}</td>
                     <td>${c.voucher.voucherId}</td>
                     <td>${c.customer.customerId}</td>

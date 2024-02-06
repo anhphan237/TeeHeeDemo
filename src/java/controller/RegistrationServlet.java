@@ -69,7 +69,7 @@ public class RegistrationServlet extends HttpServlet {
                 if (error) {
                     request.setAttribute("insertErr", errors);
                 } else {
-                    CustomerDTO c = cDao.searchCustomerByEmail(email);
+                    CustomerDTO c = cDao.searchCustomerByEmail_2(email);
                     if (c == null) {
                         cDao.insertCustomer(email, firstName, lastName, password, phone);
                         url = "login.jsp";

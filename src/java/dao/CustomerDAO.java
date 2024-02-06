@@ -223,41 +223,7 @@ public class CustomerDAO {
         }
         return list;
     }
-
-    public CustomerDTO searchCustomerByEmail(String email) throws ClassNotFoundException, SQLException {
-
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-
-        try {
-            con = DBHelper.makeConnection();
-            String sql = "select * from customer "
-                    + "where email = ?";
-            st = con.prepareStatement(sql);
-            st.setString(1, email);
-            rs = st.executeQuery();
-            if (rs.next()) {
-                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
-                        rs.getString("password"), rs.getString("firstName"), rs.getString("lastName"),
-                        rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
-                        rs.getBoolean("status"));
-                return c;
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
-        return null;
-    }
-
+    
     public boolean isExisted(String email) {
         try {
             Connection con = DBHelper.makeConnection();
@@ -335,50 +301,6 @@ public class CustomerDAO {
         }
 
         return c;
-    }
-
-    public CustomerDTO searchCustomerById(String customerId) throws ClassNotFoundException, SQLException {
-
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-
-        try {
-            con = DBHelper.makeConnection();
-            String sql = "SELECT [customerID]\n"
-                    + "      ,[email]\n"
-                    + "      ,[password]\n"
-                    + "      ,[firstname]\n"
-                    + "      ,[lastname]\n"
-                    + "      ,[phone]\n"
-                    + "      ,[point]\n"
-                    + "      ,[member]\n"
-                    + "      ,[img]\n"
-                    + "      ,[status]\n"
-                    + "  FROM [dbo].[Customer]\n"
-                    + "  WHERE [customerID] = ?";
-            st = con.prepareStatement(sql);
-            st.setString(1, customerId);
-            rs = st.executeQuery();
-            if (rs.next()) {
-                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
-                        rs.getString("password"), rs.getString("firstname"), rs.getString("lastname"),
-                        rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
-                        rs.getBoolean("status"));
-                return c;
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
-        return null;
     }
 
     public boolean updateCustomer(CustomerDTO s)
@@ -523,5 +445,248 @@ public class CustomerDAO {
             }
         }
         return false;
+    }
+    
+    public boolean updatePassword(String password, String customerId)
+            throws ClassNotFoundException, SQLException {
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement stm = null;
+        int result = 0;
+
+        try {
+            con = DBHelper.makeConnection();
+            if (con != null) {
+                String sql = "UPDATE [dbo].[Customer]\n"
+                        + "   SET [password] = ?\n"
+                        + " WHERE [customerID] = ?";
+
+                stm = con.prepareStatement(sql);
+
+                stm.setString(1, password);
+                stm.setString(2, customerId);
+
+                result = stm.executeUpdate();
+
+                if (result != 0) {
+                    return true;
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
+    
+    public CustomerDTO searchCustomerById(String customerId) throws ClassNotFoundException, SQLException {
+
+        Connection con = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "SELECT [customerID]\n"
+                    + "      ,[email]\n"
+                    + "      ,[password]\n"
+                    + "      ,[firstname]\n"
+                    + "      ,[lastname]\n"
+                    + "      ,[phone]\n"
+                    + "      ,[point]\n"
+                    + "      ,[member]\n"
+                    + "      ,[img]\n"
+                    + "      ,[status]\n"
+                    + "  FROM [dbo].[Customer]\n"
+                    + "  WHERE [customerID] = ?";
+            st = con.prepareStatement(sql);
+            st.setString(1, customerId);
+            rs = st.executeQuery();
+            if (rs.next()) {
+                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
+                        rs.getString("password"), rs.getString("firstname"), rs.getString("lastname"),
+                        rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
+                        rs.getBoolean("status"));
+                return c;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return null;
+    }
+    
+    public ArrayList<CustomerDTO> searchCustomerByName(String firstName) throws ClassNotFoundException, SQLException {
+
+        Connection con = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        ArrayList<CustomerDTO> list = new ArrayList();
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "SELECT [customerID]\n"
+                    + "      ,[email]\n"
+                    + "      ,[password]\n"
+                    + "      ,[firstname]\n"
+                    + "      ,[lastname]\n"
+                    + "      ,[phone]\n"
+                    + "      ,[point]\n"
+                    + "      ,[member]\n"
+                    + "      ,[img]\n"
+                    + "      ,[status]\n"
+                    + "  FROM [dbo].[Customer]\n"
+                    + "  WHERE [firstname] like ?";
+            st = con.prepareStatement(sql);
+            st.setString(1, "%" +firstName + "%");
+            rs = st.executeQuery();
+            while (rs.next()) {
+                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
+                        rs.getString("password"), rs.getString("firstname"), rs.getString("lastname"),
+                        rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
+                        rs.getBoolean("status"));
+                list.add(c);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return list;
+    }
+    
+    public ArrayList<CustomerDTO> searchCustomerByPhone(String phone) throws ClassNotFoundException, SQLException {
+
+        Connection con = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        ArrayList<CustomerDTO> list = new ArrayList();
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "SELECT [customerID]\n"
+                    + "      ,[email]\n"
+                    + "      ,[password]\n"
+                    + "      ,[firstname]\n"
+                    + "      ,[lastname]\n"
+                    + "      ,[phone]\n"
+                    + "      ,[point]\n"
+                    + "      ,[member]\n"
+                    + "      ,[img]\n"
+                    + "      ,[status]\n"
+                    + "  FROM [dbo].[Customer]\n"
+                    + "  WHERE [phone] = ?";
+            st = con.prepareStatement(sql);
+            st.setString(1, phone);
+            rs = st.executeQuery();
+            while (rs.next()) {
+                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
+                        rs.getString("password"), rs.getString("firstname"), rs.getString("lastname"),
+                        rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
+                        rs.getBoolean("status"));
+                list.add(c);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return list;
+    }
+    
+    public ArrayList<CustomerDTO> searchCustomerByEmail(String email) throws ClassNotFoundException, SQLException {
+
+        Connection con = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        ArrayList<CustomerDTO> list = new ArrayList<>();
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "select * from customer "
+                    + "where email like ?";
+            st = con.prepareStatement(sql);
+            st.setString(1, "%"+email+"%");
+            rs = st.executeQuery();
+            while (rs.next()) {
+                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
+                        rs.getString("password"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
+                        rs.getBoolean("status"));
+                list.add(c);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return list;
+    }
+    
+    public CustomerDTO searchCustomerByEmail_2(String email) throws ClassNotFoundException, SQLException {
+
+        Connection con = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        ArrayList<CustomerDTO> list = new ArrayList<>();
+
+        try {
+            con = DBHelper.makeConnection();
+            String sql = "select * from customer "
+                    + "where email like ?";
+            st = con.prepareStatement(sql);
+            st.setString(1, "%"+email+"%");
+            rs = st.executeQuery();
+            while (rs.next()) {
+                CustomerDTO c = new CustomerDTO(rs.getString("customerId"), rs.getString("email"),
+                        rs.getString("password"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("phone"), rs.getInt("point"), rs.getString("member"), rs.getString("img"),
+                        rs.getBoolean("status"));
+                return c;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return null;
     }
 }

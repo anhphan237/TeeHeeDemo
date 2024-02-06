@@ -23,6 +23,26 @@
     <center>
         <h1>List of Customers</h1>
         <h3><a href="addCustomer.jsp">Add new</a></h3>
+        
+        <form action="SearchCustomerById">
+            Search Service By ID<input type="text" name="txtSearchValue"></input>
+            <input type="submit" value="Search"/>
+        </form>
+        
+        <form action="SearchCustomerByName">
+            Search Service By Name<input type="text" name="txtSearchValue"></input>
+            <input type="submit" value="Search"/>
+        </form>
+        
+        <form action="SearchCustomerByPhone">
+            Search Service By Phone<input type="text" name="txtSearchValue"></input>
+            <input type="submit" value="Search"/>
+        </form>
+        
+        <form action="SearchCustomerByEmail">
+            Search Service By Email<input type="text" name="txtSearchValue"></input>
+            <input type="submit" value="Search"/>
+        </form>
 
         <table border="1px" width="40%">
             <tr>
@@ -56,6 +76,7 @@
                         <a href="UpdateCustomerServlet?CustomerId=${id}">update</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="#" onclick="doDisable('${id}')">disable</a>
                         <a href="CustomerProfileServlet?CustomerId=${id}">customer's profile</a>
+                        <a href="UpdateCustomerPassword?CustomerId=${id}">update customer's password</a>
                     </td>
                 </tr>
             </c:forEach>

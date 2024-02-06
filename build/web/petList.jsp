@@ -23,6 +23,12 @@
     <center>
         <h1>List of Pets</h1>
         <h3><a href="addPet.jsp">Add new</a></h3>
+        
+        <form action="SearchPetByCustomerId">
+            Search Pet By Customer ID<input type="text" name="txtSearchValue"></input>
+            <input type="submit" value="Search"/>
+        </form>
+
 
         <table border="1px" width="40%">
             <tr>

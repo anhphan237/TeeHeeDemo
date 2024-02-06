@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/web/transaction.jsp</file>
-            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/web/updateTransaction.jsp</file>
-            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/src/java/dto/TransactionDTO.java</file>
-            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/src/java/dao/TransactionDAO.java</file>
-            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/src/java/controller/UpdateTransactionServlet.java</file>
+            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/web/user_view/user_profile_change_password.jsp</file>
+            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/web/customerList.jsp</file>
+            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/src/java/controller/UpdateCustomerServlet.java</file>
+            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/src/java/controller/UpdateCustomerPassword.java</file>
+            <file>file:/D:/SPRING24/PRJ301/TeeHeeDemo1-master/src/java/dao/CustomerDAO.java</file>
         </group>
     </open-files>
 </project-private>
