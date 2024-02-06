@@ -4,8 +4,8 @@
  */
 package dto;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,17 +18,21 @@ public class OrderDTO {
     private double total;
     private VoucherDTO voucher;
     private CustomerDTO customer;
+    private OrderBoardingDetailDTO orderBoardingDetail;
+    private ArrayList<OrderServiceDetailDTO> orderServiceDetailList;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(String orderId, Timestamp createdDate, int status, double total, VoucherDTO voucher, CustomerDTO customer) {
+    public OrderDTO(String orderId, Timestamp createdDate, int status, double total, VoucherDTO voucher, CustomerDTO customer, OrderBoardingDetailDTO orderBoardingDetail, ArrayList<OrderServiceDetailDTO> orderServiceDetailList) {
         this.orderId = orderId;
         this.createdDate = createdDate;
         this.status = status;
         this.total = total;
         this.voucher = voucher;
         this.customer = customer;
+        this.orderBoardingDetail = orderBoardingDetail;
+        this.orderServiceDetailList = orderServiceDetailList;
     }
 
     public String getOrderId() {
@@ -79,5 +83,24 @@ public class OrderDTO {
         this.customer = customer;
     }
 
+    public OrderBoardingDetailDTO getOrderBoardingDetail() {
+        return orderBoardingDetail;
+    }
+
+    public void setOrderBoardingDetail(OrderBoardingDetailDTO orderBoardingDetail) {
+        this.orderBoardingDetail = orderBoardingDetail;
+    }
+
+    public ArrayList<OrderServiceDetailDTO> getOrderServiceDetailList() {
+        return orderServiceDetailList;
+    }
+
+    public void setOrderServiceDetailList(ArrayList<OrderServiceDetailDTO> orderServiceDetailList) {
+        this.orderServiceDetailList = orderServiceDetailList;
+    }
+
+    
+
+    
     
 }

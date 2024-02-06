@@ -19,41 +19,41 @@ import utils.DBHelper;
  */
 public class TransactionDAO {
 
-    public ArrayList<TransactionDTO> getAll() throws ClassNotFoundException, SQLException {
-        ArrayList<TransactionDTO> list = new ArrayList();
-        Connection con = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        OrderDAO oDAO = new OrderDAO();
-
-        try {
-            con = DBHelper.makeConnection();
-            String sql = "SELECT [transactionID]\n"
-                    + "      ,[createdTime]\n"
-                    + "      ,[value]\n"
-                    + "      ,[orderID]\n"
-                    + "  FROM [dbo].[Transaction]";
-
-            st = con.prepareStatement(sql);
-            rs = st.executeQuery();
-            while (rs.next()) {
-                TransactionDTO c = new TransactionDTO(rs.getString("transactionId"), rs.getDate("createdTime"),
-                        rs.getDouble("value"), oDAO.searchOrderById(rs.getString("orderId")));
-                list.add(c);
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
-        return list;
-    }
+//    public ArrayList<TransactionDTO> getAll() throws ClassNotFoundException, SQLException {
+//        ArrayList<TransactionDTO> list = new ArrayList();
+//        Connection con = null;
+//        PreparedStatement st = null;
+//        ResultSet rs = null;
+//        OrderDAO oDAO = new OrderDAO();
+//
+//        try {
+//            con = DBHelper.makeConnection();
+//            String sql = "SELECT [transactionID]\n"
+//                    + "      ,[createdTime]\n"
+//                    + "      ,[value]\n"
+//                    + "      ,[orderID]\n"
+//                    + "  FROM [dbo].[Transaction]";
+//
+//            st = con.prepareStatement(sql);
+//            rs = st.executeQuery();
+//            while (rs.next()) {
+//                TransactionDTO c = new TransactionDTO(rs.getString("transactionId"), rs.getDate("createdTime"),
+//                        rs.getDouble("value"), oDAO.searchOrderById(rs.getString("orderId")));
+//                list.add(c);
+//            }
+//        } finally {
+//            if (rs != null) {
+//                rs.close();
+//            }
+//            if (st != null) {
+//                st.close();
+//            }
+//            if (con != null) {
+//                con.close();
+//            }
+//        }
+//        return list;
+//    }
 
     public boolean insertTransaction(Date createdTime, double value, String orderId) throws ClassNotFoundException, SQLException {
         Connection con = null;
@@ -131,46 +131,46 @@ public class TransactionDAO {
         return null;
     }
 
-    public TransactionDTO searchTransactionById(String transactionId) throws ClassNotFoundException, SQLException {
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement stm = null;
-        OrderDAO oDAO = new OrderDAO();
-
-        try {
-            con = DBHelper.makeConnection();
-            if (con != null) {
-                String sql = "SELECT [transactionID]\n"
-                        + "      ,[createdTime]\n"
-                        + "      ,[value]\n"
-                        + "      ,[orderID]\n"
-                        + "  FROM [dbo].[Transaction]"
-                        + "  where [transactionID] = ?";
-
-                stm = con.prepareStatement(sql);
-                stm.setString(1, transactionId);
-                rs = stm.executeQuery();
-                if (rs.next()) {
-                    TransactionDTO b = new TransactionDTO(transactionId, rs.getDate("createdTime"), rs.getDouble("value"),
-                            oDAO.searchOrderById(rs.getString("orderId")));
-                    if (b != null) {
-                        return b;
-                    }
-                }
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stm != null) {
-                stm.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
-        return null;
-    }
+//    public TransactionDTO searchTransactionById(String transactionId) throws ClassNotFoundException, SQLException {
+//        Connection con = null;
+//        ResultSet rs = null;
+//        PreparedStatement stm = null;
+//        OrderDAO oDAO = new OrderDAO();
+//
+//        try {
+//            con = DBHelper.makeConnection();
+//            if (con != null) {
+//                String sql = "SELECT [transactionID]\n"
+//                        + "      ,[createdTime]\n"
+//                        + "      ,[value]\n"
+//                        + "      ,[orderID]\n"
+//                        + "  FROM [dbo].[Transaction]"
+//                        + "  where [transactionID] = ?";
+//
+//                stm = con.prepareStatement(sql);
+//                stm.setString(1, transactionId);
+//                rs = stm.executeQuery();
+//                if (rs.next()) {
+//                    TransactionDTO b = new TransactionDTO(transactionId, rs.getDate("createdTime"), rs.getDouble("value"),
+//                            oDAO.searchOrderById(rs.getString("orderId")));
+//                    if (b != null) {
+//                        return b;
+//                    }
+//                }
+//            }
+//        } finally {
+//            if (rs != null) {
+//                rs.close();
+//            }
+//            if (stm != null) {
+//                stm.close();
+//            }
+//            if (con != null) {
+//                con.close();
+//            }
+//        }
+//        return null;
+//    }
 
     public boolean updateTransaction(TransactionDTO t)
             throws ClassNotFoundException, SQLException {

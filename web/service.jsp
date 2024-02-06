@@ -56,7 +56,7 @@
 
             <c:forEach items="${requestScope.data}" var="c">
                 <tr>
-                    <td>${c.serviceId}</td>
+                    <td><a href="SearchServicePriceById?ServiceId=${c.serviceId}">${c.serviceId}</a></td>
                     <td>${c.name}</td>
                     <td>${c.rate}</td>
                     <td>${c.description}</td>

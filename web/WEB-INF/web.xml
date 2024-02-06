@@ -160,6 +160,14 @@
         <servlet-name>UpdateCustomerPassword</servlet-name>
         <servlet-class>controller.UpdateCustomerPassword</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchServicePriceById</servlet-name>
+        <servlet-class>controller.SearchServicePriceById</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServicePriceServlet</servlet-name>
+        <servlet-class>controller.ServicePriceServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -319,6 +327,14 @@
     <servlet-mapping>
         <servlet-name>UpdateCustomerPassword</servlet-name>
         <url-pattern>/UpdateCustomerPassword</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchServicePriceById</servlet-name>
+        <url-pattern>/SearchServicePriceById</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicePriceServlet</servlet-name>
+        <url-pattern>/ServicePriceServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

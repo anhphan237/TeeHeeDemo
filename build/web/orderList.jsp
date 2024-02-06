@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +17,7 @@
     <center>
         <h1>List of Orders</h1>
         <h3><a href="addOrder.jsp">Add new</a></h3>
-        
+
         <form action="SearchOrderByStatus">
             Search Order By Status<input type="text" name="txtSearchValue"></input>
             <input type="submit" value="Search"/>
@@ -30,6 +31,11 @@
                 <th>Total</th>
                 <th>Voucher ID</th>
                 <th>Customer ID</th>
+                <th>Room ID</th>
+                <th>Pet ID</th>
+                <th>Service ID</th>
+                <th>Check In Date</th>
+                <th>Check Out Date</th>
                 <th>Action</th>
             </tr>
             <c:forEach items="${requestScope.data}" var="c">
@@ -56,6 +62,21 @@
                     <td>${c.total}</td>
                     <td>${c.voucher.voucherId}</td>
                     <td>${c.customer.customerId}</td>
+                    <td>${c.orderBoardingDetail.room.roomId}</td>
+                    <td>
+                        <c:forEach var="item" items="${c.orderServiceDetailList}" varStatus="loop">
+                            <c:if test="${loop.index == loop.index}">
+                                ${item.pet.petId}<br>
+                            </c:if>
+                        </c:forEach>
+                    </td>
+                    <td>
+                        <c:forEach var="item" items="${c.orderServiceDetailList}">
+                            ${item.service.serviceId}<br>
+                        </c:forEach>
+                    </td>
+                    <td>${c.orderBoardingDetail.checkInDate}</td>
+                    <td>${c.orderBoardingDetail.checkOutDate}</td>
                     <td style="text-align: center;">
                         <a href="UpdateOrderServlet?OrderId=${id}">update</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="#" onclick="doDisable('${id}')">disable</a>

@@ -5,22 +5,25 @@
 
 package controller;
 
-import dao.OrderDAO;
-import dto.OrderDTO;
+import dao.ServicePriceDAO;
+import dto.ServiceDTO;
+import dto.ServicePriceDTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class SearchOrderByStatus extends HttpServlet {
+public class SearchServicePriceById extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,24 +35,22 @@ public class SearchOrderByStatus extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-//        String searchValue = request.getParameter("txtSearchValue");
-//        String url = "orderList.jsp";
-//        try {
-//            if (searchValue.trim().length() > 0) {
-//                OrderDAO dao = new OrderDAO();
-//                
-//                List<OrderDTO> rs = dao.searchOrderByStatus(searchValue);
-//                request.setAttribute("searchResult", rs);
-//                url = "searchOrderByStatus.jsp";
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            ex.printStackTrace();
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        } finally {
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
-//        }
+        String serviceId = request.getParameter("ServiceId");
+        String url = "service.jsp";
+        try {
+                ServicePriceDAO dao = new ServicePriceDAO();
+                
+                ServicePriceDTO rs = dao.getServicePriceById(serviceId);
+                request.setAttribute("result", rs);
+                url = "searchServicePriceById.jsp";
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
+        }
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

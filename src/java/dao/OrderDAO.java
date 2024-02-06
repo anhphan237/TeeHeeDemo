@@ -26,24 +26,23 @@ public class OrderDAO {
         ResultSet rs = null;
         CustomerDAO cDAO = new CustomerDAO();
         VoucherDAO vDAO = new VoucherDAO();
+        OrderBoardingDetailDAO obDAO = new OrderBoardingDetailDAO();
+        OrderServiceDetailDAO osDAO = new OrderServiceDetailDAO();
 
         try {
             con = DBHelper.makeConnection();
-            String sql = "SELECT [OrderID]\n"
-                    + "      ,[createdDate]\n"
-                    + "      ,[status]\n"
-                    + "      ,[total]\n"
-                    + "      ,[voucherID]\n"
-                    + "      ,[customerID]\n"
-                    + "  FROM [dbo].[Order]"
-                    + "  order by [status], [createdDate] desc";
+            String sql = "select a.*,b.roomID,b.petID,b.checkInDate,b.checkOutDate,c.petID,c.serviceID \n"
+                    + "from [dbo].[Order] a, [dbo].[Order_Boarding_Detail] b, [dbo].[Order_Service_Detail] c\n"
+                    + "where a.OrderID = b.orderID and b.orderID = c.orderID\n"
+                    + "order by [status], [createdDate] desc";
 
             st = con.prepareStatement(sql);
             rs = st.executeQuery();
             while (rs.next()) {
                 OrderDTO o = new OrderDTO(rs.getString("orderID"), rs.getTimestamp("createdDate"),
                         rs.getInt("status"), rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
-                        cDAO.searchCustomerById(rs.getString("customerId")));
+                        cDAO.searchCustomerById(rs.getString("customerId")), obDAO.getOrderBoardingDetailById(rs.getString("orderID")),
+                        osDAO.getOrderBoardingDetailById(rs.getString("orderID")));
                 list.add(o);
             }
         } finally {
@@ -140,51 +139,50 @@ public class OrderDAO {
         return null;
     }
 
-    public OrderDTO searchOrderById(String orderId) throws ClassNotFoundException, SQLException {
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement stm = null;
-        VoucherDAO vDAO = new VoucherDAO();
-        CustomerDAO cDAO = new CustomerDAO();
-
-        try {
-            con = DBHelper.makeConnection();
-            if (con != null) {
-                String sql = "SELECT [OrderID]\n"
-                        + "      ,[createdDate]\n"
-                        + "      ,[status]\n"
-                        + "      ,[total]\n"
-                        + "      ,[voucherID]\n"
-                        + "      ,[customerID]\n"
-                        + "  FROM [dbo].[Order]"
-                        + "  where [OrderID] = ?";
-
-                stm = con.prepareStatement(sql);
-                stm.setString(1, orderId);
-                rs = stm.executeQuery();
-                if (rs.next()) {
-                    OrderDTO b = new OrderDTO(orderId, rs.getTimestamp("createdDate"), rs.getInt("status"),
-                            rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
-                            cDAO.searchCustomerById(rs.getString("customerId")));
-                    if (b != null) {
-                        return b;
-                    }
-                }
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stm != null) {
-                stm.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
-        return null;
-    }
-
+//    public OrderDTO searchOrderById(String orderId) throws ClassNotFoundException, SQLException {
+//        Connection con = null;
+//        ResultSet rs = null;
+//        PreparedStatement stm = null;
+//        VoucherDAO vDAO = new VoucherDAO();
+//        CustomerDAO cDAO = new CustomerDAO();
+//
+//        try {
+//            con = DBHelper.makeConnection();
+//            if (con != null) {
+//                String sql = "SELECT [OrderID]\n"
+//                        + "      ,[createdDate]\n"
+//                        + "      ,[status]\n"
+//                        + "      ,[total]\n"
+//                        + "      ,[voucherID]\n"
+//                        + "      ,[customerID]\n"
+//                        + "  FROM [dbo].[Order]"
+//                        + "  where [OrderID] = ?";
+//
+//                stm = con.prepareStatement(sql);
+//                stm.setString(1, orderId);
+//                rs = stm.executeQuery();
+//                if (rs.next()) {
+//                    OrderDTO b = new OrderDTO(orderId, rs.getTimestamp("createdDate"), rs.getInt("status"),
+//                            rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
+//                            cDAO.searchCustomerById(rs.getString("customerId")));
+//                    if (b != null) {
+//                        return b;
+//                    }
+//                }
+//            }
+//        } finally {
+//            if (rs != null) {
+//                rs.close();
+//            }
+//            if (stm != null) {
+//                stm.close();
+//            }
+//            if (con != null) {
+//                con.close();
+//            }
+//        }
+//        return null;
+//    }
     public boolean updateOrder(OrderDTO o)
             throws ClassNotFoundException, SQLException {
         Connection con = null;
@@ -231,51 +229,51 @@ public class OrderDAO {
         }
         return false;
     }
-    
-    public ArrayList<OrderDTO> searchOrderByStatus(String status) throws ClassNotFoundException, SQLException {
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement stm = null;
-        VoucherDAO vDAO = new VoucherDAO();
-        CustomerDAO cDAO = new CustomerDAO();
-        ArrayList<OrderDTO> list = new ArrayList();
 
-        try {
-            con = DBHelper.makeConnection();
-            if (con != null) {
-                String sql = "SELECT [OrderID]\n"
-                        + "      ,[createdDate]\n"
-                        + "      ,[status]\n"
-                        + "      ,[total]\n"
-                        + "      ,[voucherID]\n"
-                        + "      ,[customerID]\n"
-                        + "  FROM [dbo].[Order]"
-                        + "  where [status] = ?\n"
-                        + "  order by [createdDate] desc";
-
-                stm = con.prepareStatement(sql);
-                stm.setString(1, status);
-                rs = stm.executeQuery();
-                while (rs.next()) {
-                    OrderDTO b = new OrderDTO(rs.getString("orderID"), rs.getTimestamp("createdDate"), rs.getInt("status"),
-                            rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
-                            cDAO.searchCustomerById(rs.getString("customerId")));
-                    if (b != null) {
-                        list.add(b);
-                    }
-                }
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stm != null) {
-                stm.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
-        return list;
-    }
+//    public ArrayList<OrderDTO> searchOrderByStatus(String status) throws ClassNotFoundException, SQLException {
+//        Connection con = null;
+//        ResultSet rs = null;
+//        PreparedStatement stm = null;
+//        VoucherDAO vDAO = new VoucherDAO();
+//        CustomerDAO cDAO = new CustomerDAO();
+//        ArrayList<OrderDTO> list = new ArrayList();
+//
+//        try {
+//            con = DBHelper.makeConnection();
+//            if (con != null) {
+//                String sql = "SELECT [OrderID]\n"
+//                        + "      ,[createdDate]\n"
+//                        + "      ,[status]\n"
+//                        + "      ,[total]\n"
+//                        + "      ,[voucherID]\n"
+//                        + "      ,[customerID]\n"
+//                        + "  FROM [dbo].[Order]"
+//                        + "  where [status] = ?\n"
+//                        + "  order by [createdDate] desc";
+//
+//                stm = con.prepareStatement(sql);
+//                stm.setString(1, status);
+//                rs = stm.executeQuery();
+//                while (rs.next()) {
+//                    OrderDTO b = new OrderDTO(rs.getString("orderID"), rs.getTimestamp("createdDate"), rs.getInt("status"),
+//                            rs.getDouble("total"), vDAO.searchVoucherById(rs.getString("voucherId")),
+//                            cDAO.searchCustomerById(rs.getString("customerId")));
+//                    if (b != null) {
+//                        list.add(b);
+//                    }
+//                }
+//            }
+//        } finally {
+//            if (rs != null) {
+//                rs.close();
+//            }
+//            if (stm != null) {
+//                stm.close();
+//            }
+//            if (con != null) {
+//                con.close();
+//            }
+//        }
+//        return list;
+//    }
 }
